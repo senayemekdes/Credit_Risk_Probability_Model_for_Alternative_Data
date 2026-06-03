@@ -1,0 +1,55 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Data files (raw data should be tracked by DVC, not Git)
+data/*.csv
+data/*.parquet
+data/*.xlsx
+*.csv
+*.parquet
+
+# DVC
+.dvc/cache
+.dvc/tmp
+*.dvc.lock
+
+# Notebooks
+notebooks/*.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# Logs & outputs
+*.log
+logs/
+outputs/
+models/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Reports & large files
+reports/figures/
+reports/*.pdf
+reports/*.html
+
+# Temporary files
+temp/
+tmp/
