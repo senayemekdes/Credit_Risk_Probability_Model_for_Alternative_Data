@@ -17,7 +17,7 @@ from src.api.pydantic_models import CustomerInput, PredictionResponse
 # model_name = "CreditRiskModel"
 
 # model = mlflow.pyfunc.load_model(
-#     f"models:/{model_name}/latest"
+#     f"models:/{model_name}/latest
 # )
 
 mlflow.sklearn.log_model(..., registered_model_name="CreditRiskModel")
