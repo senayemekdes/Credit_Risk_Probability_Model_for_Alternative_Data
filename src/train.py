@@ -49,7 +49,7 @@ df = df.drop(columns=[col for col in drop_cols if col in df.columns])
 
 # =========================
 # FEATURES & TARGET
-# =========================
+# ========================
 X = df.drop("is_high_risk", axis=1)
 y = df["is_high_risk"]
 
