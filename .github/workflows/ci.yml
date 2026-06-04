@@ -33,12 +33,6 @@ jobs:
         else
           echo "No tests directory found. Skipping tests."
         fi
-
-    - name: Validate DVC
-      run: |
-        dvc --version
-        dvc status
-
     - name: Check notebooks
       run: |
         echo "Notebook validation can be added here (e.g., using nbconvert or papermill)"

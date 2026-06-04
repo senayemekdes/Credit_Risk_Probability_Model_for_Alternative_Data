@@ -1,44 +1,77 @@
-import pandas as pd
-import numpy as np
+def create_rfm_features(df):
+    """
+    Create Recency, Frequency and Monetary metrics
+    for each customer.
+    """
 
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.impute import SimpleImputer
+    df = df.copy()
 
-def extract_time_features(df):
-    ...
-    return df
-
-
-def create_customer_features(df):
-    ...
-    return customer_features
-
-
-def build_feature_table(df):
-    feature_df = df.copy()
-    ...
-    return feature_df
-
-def create_preprocessing_pipeline(
-    numerical_features,
-    categorical_features
-):
-    ...
-    return preprocessor
-def process_data(df):
-    ...
-    return X_processed
-if __name__ == "__main__":
-
-    df = pd.read_excel("data/raw/data.xlsx")
-
-    processed_data = build_feature_table(df)
-
-    processed_data.to_csv(
-        "data/processed/processed_data.csv",
-        index=False
+    df["TransactionStartTime"] = pd.to_datetime(
+        df["TransactionStartTime"]
     )
 
-    print("Processed data saved successfully.")
+    snapshot_date = (
+        df["TransactionStartTime"].max()
+        + pd.Timedelta(days=1)
+    )
+
+    rfm = (
+        df.groupby("CustomerId")
+        .agg(
+            Recency=(
+                "TransactionStartTime",
+                lambda x: (
+                    snapshot_date - x.max()
+                ).days
+            ),
+            Frequency=(
+                "TransactionId",
+                "count"
+            ),
+            Monetary=(
+                "Amount",
+                "sum"
+            )
+        )
+        .reset_index()
+    )
+
+    return rfm
+from sklearn.preprocessing import StandardScaler
+def scale_rfm(rfm):
+
+    scaler = StandardScaler()
+
+    rfm_scaled = scaler.fit_transform(
+        rfm[[
+            "Recency",
+            "Frequency",
+            "Monetary"
+        ]]
+    )
+
+    return rfm_scaled
+from sklearn.cluster import KMeans
+def cluster_customers(rfm):
+
+    rfm_scaled = scale_rfm(rfm)
+    rfm = build_rfm_table(df)
+
+    kmeans = KMeans(
+        n_clusters=3,
+        random_state=42,
+        n_init=10
+    )
+
+    rfm["cluster"] = kmeans.fit_predict(
+        rfm_scaled
+    )
+
+    return rfm
+rfm_clustered = cluster_customers(rfm)
+
+print(
+    rfm_clustered.groupby("cluster")[
+        ["Recency", "Frequency", "Monetary"]
+    ].mean()
+)
